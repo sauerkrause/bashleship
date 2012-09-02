@@ -4,7 +4,7 @@ ROW=$1
 COL=$2
 if [ -a ./.state/$1/$2 ]
 then
-    echo "HIT"
+    exit 0
 else
-    echo "MISS"
+    exit 1
 fi

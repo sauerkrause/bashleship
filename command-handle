@@ -6,9 +6,15 @@ function handle-command {
     col=$3
     case $command in
 	"target" )
-	    result=`./$command $arg` ;;
+	    if ./$command $row $col
+	    then
+		echo HIT
+	    else
+		echo MISS
+	    fi
+	    ;;
     esac
-    echo $result
+    echo $result > result
 }
 
 read command_input
