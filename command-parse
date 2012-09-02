@@ -1,1 +1,16 @@
 #!/bin/bash
+
+function handle-command {
+    command=$1
+    row=$2
+    col=$3
+    case $command in
+	"target" )
+	    result=`./$command $arg` ;;
+    esac
+    echo $result
+}
+
+read command_input
+args=`echo $command_input | sed "s: ::g" | sed "s:[{}]: :g" | sed "s:\([A-Z]\):\1 :g"`
+handle-command $args

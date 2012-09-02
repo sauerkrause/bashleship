@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ROW=$1
+COL=$2
+if [ -a ./.state/$1/$2 ]
+then
+    echo "HIT"
+else
+    echo "MISS"
+fi
