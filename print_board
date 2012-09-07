@@ -1,0 +1,24 @@
+#!/bin/bash
+
+printf "  "
+for i in {A..L}
+do
+    printf $i
+done
+printf "\n"
+
+for i in {1..10}
+do
+    printf "%2d" $i
+    for j in {A..L}
+    do
+	if [ -a .state/$j/$i ]
+	then
+	    printf "O"
+	else
+	    printf "-"
+	fi
+    done
+    printf "\n"
+done
+
