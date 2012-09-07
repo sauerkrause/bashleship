@@ -1,0 +1,151 @@
+#!/bin/bash
+
+SHIPS=( Carrier Battleship Submarine Destroyer Dingy )
+COUNT=${#SHIPS[@]}
+
+function increment_char {
+    times=$2
+    char=$1
+    i=0
+    while [[ $i -lt $times ]]; do
+	char=`echo $char | tr 'A-L' 'B-M'`
+	i=$((i+1))
+    done
+    echo $char
+}
+
+function increment_num {
+    
+}
+
+function query_for_ship {
+    unset ship
+    until index_of $ship; 
+    do
+	echo Which ship would you like to place?
+	for s in ${SHIPS[@]}
+	do
+	    echo $s
+	done
+	echo -----------------------------------
+	read ship
+	clear
+
+	if ! index_of $ship
+	then
+	    echo "$ship is not a ship you can place"
+	fi
+	ship=$ship
+    done
+}
+
+function init_board {
+    rm -rf .state
+    for i in {A..Z}
+    do
+	mkdir -p .state/$i
+    done
+}
+
+function index_of { # ship
+    i=0
+    local_ship=$1
+    if [ -z $local_ship ]
+    then
+	return `false`
+    fi
+    while [ $i -lt $COUNT ]
+    do
+	s=${SHIPS[$i]}
+	if [ -n $s ]; then
+	    if [ $local_ship == "$s" ]
+	    then
+		index=$i
+		return `true`
+	    fi
+	fi
+	i=`expr $i + 1`
+    done
+    return `false`
+}
+
+function place_ship_vertically {
+    local_ship=$1
+    index_of $local_ship
+}
+
+function place_ship_horizontally {
+    local_ship=$1
+    index_of $local_ship
+}
+
+function place_ship {
+    SHIP=$1
+    ROW=$2
+    COL=$3
+    DIRECTION=$4
+    echo Placing $SHIP at $COL $ROW facing $DIRECTION
+    if index_of $SHIP
+    then
+	index_of $SHIP
+	if [ $DIRECTION = Vertical ]
+	then
+	    place_ship_vertically $1 $2 $3
+	else
+	    place_ship_horizontally $1 $2 $3
+	fi
+	unset SHIPS[$index]
+    else
+	echo "Ship not found"
+    fi
+}
+
+function print_board {
+    printf "  "
+    for i in {A..L}
+    do
+	printf $i
+    done
+    printf "\n"
+
+    for i in {1..10}
+    do
+	printf "%2d" $i
+	for j in {A..L}
+	do
+	    if [ -a .state/$j/$i ]
+	    then
+		printf "|"
+	    else
+		printf "-"
+	    fi
+	done
+	printf "\n"
+    done
+}
+
+function place_ships {
+    until [[ ${#SHIPS[@]} == '0' ]]; do
+	query_for_ship
+	echo Where would you like to place your $ship?
+	read starting_point
+	clear
+	echo Which direction would you like it to face?
+	echo Horizontal
+	echo Vertical
+	echo ------------------------------------------
+	read direction
+	clear
+	row=`echo $starting_point | sed 's:[A-Z ]::g'`
+	col=`echo $starting_point | sed 's:[0-9 ]::g'`
+	place_ship $ship $row $col $direction
+	print_board
+	unset $ship
+    done
+}
+# --- MAIN ---
+clear
+echo Initializing board
+init_board
+place_ships
+
