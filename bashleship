@@ -120,6 +120,8 @@ function place_ship_vertically {
 	echo "This position will hit another ship or go off board"
 	return `false`
     fi
+    command="store { $local_ship, $locations }"
+    echo $command | ./store_ship
     return `true`
 }
 
@@ -146,6 +148,8 @@ function place_ship_horizontally {
 	echo "This position will hit another ship or go off board"
 	return `false`
     fi
+    command="store { $local_ship, $locations }"
+    echo $command | ./store_ship
     return `true`
 }
 

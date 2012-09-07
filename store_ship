@@ -1,0 +1,33 @@
+#!/bin/bash
+
+read command_input
+# command has format 'store { shipname, location... }
+
+function filter_awk {
+    beginning="echo $command_input | awk -F '[,{}]' '{print "
+    end="}' - | sed 's:^ *::'"
+    eval $beginning$1$end
+}
+
+
+function store {
+    name=$1
+    locations=$2
+    mkdir -p $HOME/.bashleship/.state/ships
+    touch $HOME/.bashleship/.state/ships/$name
+    truncate -s 0 $HOME/.bashleship/.state/ships/$name
+    locations=`echo $locations | tr ' ' '\n'`
+    lines=( $locations )
+    for i in "${lines[@]}"
+    do
+	echo $i >> $HOME/.bashleship/.state/ships/$name
+    done
+}
+
+cmd_name=`filter_awk '$1'`
+ship_name=`filter_awk '$2'`
+args=`filter_awk '$3'`
+
+$cmd_name "$ship_name" "$args"
+
+exit 0
