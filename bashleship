@@ -47,10 +47,10 @@ function query_for_ship {
 }
 
 function init_board {
-    rm -rf .state
+    rm -rf $HOME/.state
     for i in {A..Z}
     do
-	mkdir -p .state/$i
+	mkdir -p $HOME/.state/$i
     done
 }
 
@@ -195,7 +195,9 @@ function place_ships {
 }
 # --- MAIN ---
 clear
+pushd `dirname $0` > /dev/null
 echo Initializing board
 init_board
 place_ships
+popd > /dev/null
 

@@ -16,7 +16,7 @@ do
 	exit 1
     fi
 
-    if [ -a ./.state/$col/$row ]; then
+    if [ -a $HOME/.state/$col/$row ]; then
 	echo $col$row exists
 	exit 1
     fi

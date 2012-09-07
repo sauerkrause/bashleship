@@ -12,7 +12,7 @@ do
     printf "%2d" $i
     for j in {A..L}
     do
-	if [ -a .state/$j/$i ]
+	if [ -a $HOME/.state/$j/$i ]
 	then
 	    printf "O"
 	else

@@ -2,7 +2,7 @@
 
 ROW=$1
 COL=$2
-if [ -a ./.state/$1/$2 ]
+if [ -a $HOME/.state/$1/$2 ]
 then
     exit 0
 else
