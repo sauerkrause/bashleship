@@ -1,1 +1,25 @@
 #!/bin/bash
+
+ARGS=$@
+
+for thing in ${ARGS[@]}
+do
+    row=`echo $thing | sed 's/[a-zA-Z]//g'`
+    col=`echo $thing | sed 's/[0-9]//g'`
+    result=`echo $col | sed 's/[A-La-l]//g'`
+    if [ $result ]; then
+	echo Greater than L
+	exit 1
+    fi
+    if [ $row -gt "10" ]; then
+	echo Greater than 10
+	exit 1
+    fi
+
+    if [ -a ./.state/$col/$row ]; then
+	echo $col$row exists
+	exit 1
+    fi
+done
+
+exit 0

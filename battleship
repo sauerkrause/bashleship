@@ -105,19 +105,22 @@ function place_ship_vertically {
     index_of $local_ship
     length=${LENGTHS[$index]}
     i=0
-    locations=""
+    unset locations
     while [ $i -lt $length ]
     do
 	mutable_row=`increment_num $local_row $i`
-	locations="$locations $mutable_row$3"
+	locations="$locations $3$mutable_row"
 	i=`expr $i + 1`
     done
-
-    ./check_locations $locations
-    if [ $? ]
+    
+    if ./check_locations $locations
     then
 	./place_locations $locations
+    else
+	echo "This position will hit another ship or go off board"
+	return `false`
     fi
+    return `true`
 }
 
 function place_ship_horizontally {
@@ -127,19 +130,23 @@ function place_ship_horizontally {
     index_of $local_ship
     length=${LENGTHS[$index]}
     i=0
-    location=""
+    unset locations
     while [ $i -lt $length ]
     do
-	mutable_col=`increment_num $local_col $i`
-	locations="$locations $2$mutable_col"
+	mutable_col=`increment_char $local_col $i`
+	locations="$locations $mutable_col$2"
 	i=`expr $i + 1`
     done
     
-    ./check_locations $locations
-    if [ $? ]
+    
+    if ./check_locations $locations
     then
 	./place_locations $locations
+    else
+	echo "This position will hit another ship or go off board"
+	return `false`
     fi
+    return `true`
 }
 
 
@@ -154,38 +161,17 @@ function place_ship {
 	index_of $SHIP
 	if [ $DIRECTION = Vertical ]
 	then
-	    place_ship_vertically $1 $2 $3
+	    if place_ship_vertically $1 $2 $3; then
+		unset SHIPS[$index]
+	    fi
 	else
-	    place_ship_horizontally $1 $2 $3
+	    if place_ship_horizontally $1 $2 $3; then
+		unset SHIPS[$index]
+	    fi
 	fi
-	unset SHIPS[$index]
     else
 	echo "Ship not found"
     fi
-}
-
-function print_board {
-    printf "  "
-    for i in {A..L}
-    do
-	printf $i
-    done
-    printf "\n"
-
-    for i in {1..10}
-    do
-	printf "%2d" $i
-	for j in {A..L}
-	do
-	    if [ -a .state/$j/$i ]
-	    then
-		printf "|"
-	    else
-		printf "-"
-	    fi
-	done
-	printf "\n"
-    done
 }
 
 function place_ships {
@@ -203,7 +189,7 @@ function place_ships {
 	row=`echo $starting_point | sed 's:[A-Z ]::g'`
 	col=`echo $starting_point | sed 's:[0-9 ]::g'`
 	place_ship $ship $row $col $direction
-	print_board
+	./print_board
 	unset $ship
     done
 }

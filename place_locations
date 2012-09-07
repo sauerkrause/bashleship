@@ -1,1 +1,12 @@
 #!/bin/bash
+
+i=0
+
+for thing in $@
+do
+    row=`echo $thing | sed 's/[a-zA-Z]//g'`
+    col=`echo $thing | sed 's/[0-9]//g'`
+    mkdir -p ./.state/$col/$row
+done
+
+exit $i
