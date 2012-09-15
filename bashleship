@@ -36,7 +36,8 @@ function query_for_ship {
 	done
 	echo -----------------------------------
 	read ship
-	clear
+
+	echo ""
 
 	if ! index_of $ship
 	then
@@ -183,7 +184,7 @@ function place_ships {
 	query_for_ship
 	echo Where would you like to place your $ship?
 	read starting_point
-	clear
+	echo ""
 	echo Which direction would you like it to face?
 	echo Horizontal
 	echo Vertical
