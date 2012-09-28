@@ -15,7 +15,7 @@ function store {
     locations=$2
     mkdir -p $HOME/.bashleship/.state/ships
     touch $HOME/.bashleship/.state/ships/$name
-    truncate -s 0 $HOME/.bashleship/.state/ships/$name
+    cat /dev/null > $HOME/.bashleship/.state/ships/$name
     locations=`echo $locations | tr ' ' '\n'`
     lines=( $locations )
     for i in "${lines[@]}"
