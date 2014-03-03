@@ -4,9 +4,7 @@ read command_input
 # command has format 'store { shipname, location... }'
 
 function filter_awk {
-    beginning="echo $command_input | awk -F '[,{}]' '{print "
-    end="}' - | sed 's:^ *::'"
-    eval $beginning$1$end
+    echo $command_input | awk -F '[,{}]' '{print '$1'}' - | sed 's:^ *::'
 }
 
 
